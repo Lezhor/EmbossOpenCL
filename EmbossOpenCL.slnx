@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="EmbossOpenCL.vcxproj" />
+  <Project Path="EmbossOpenCL.vcxproj" Id="8e4c3fa0-1866-4af1-a0e5-41db6e869b8d" />
 </Solution>
