@@ -8,16 +8,11 @@ __kernel void processImage(__global const unsigned char* inputImage,
     int y = get_global_id(1);
 
     // 1. Boundary Check
-    // We cannot process the very edge pixels because they don't have neighbors
-    // on all sides. We skip them (or leave them black).
     if (x < 1 || y < 1 || x >= width - 1 || y >= height - 1) {
         return; 
     }
 
     // 2. The Convolution Matrix (Emboss)
-    //    -2  -1   0
-    //    -1   1   1
-    //     0   1   2
     const int filter[3][3] = {
         {-2, -1,  0},
         {-1,  1,  1},
@@ -27,7 +22,7 @@ __kernel void processImage(__global const unsigned char* inputImage,
     // 3. Apply the filter to each channel (R, G, B) independently
     for (int c = 0; c < channels; c++) 
     {
-        // If it's the Alpha channel (4th channel), just copy it directly and skip math
+        // If there is an alpha channel, copy it directly
         if (c == 3) {
             int currentPixel = (y * width * channels) + (x * channels) + c;
             outputImage[currentPixel] = inputImage[currentPixel];

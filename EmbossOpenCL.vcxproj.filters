@@ -27,5 +27,6 @@
   <ItemGroup>
     <None Include="image_kernel.cl" />
     <None Include="emboss_kernel.cl" />
+    <None Include="grayscale_kernel.cl" />
   </ItemGroup>
 </Project>

@@ -70,7 +70,8 @@ int main()
     cl::CommandQueue queue(context, default_device);
 
     // Build Program
-    std::string kernelSource = read_kernel("emboss_kernel.cl");
+    //std::string kernelSource = read_kernel("grayscale_kernel.cl");
+    std::string kernelSource = read_kernel("grayscale_kernel.cl");
     std::vector<std::string> sources;
     sources.push_back(kernelSource);
 
