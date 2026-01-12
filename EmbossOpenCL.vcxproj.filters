@@ -28,5 +28,6 @@
     <None Include="image_kernel.cl" />
     <None Include="emboss_kernel.cl" />
     <None Include="grayscale_kernel.cl" />
+    <None Include="gray_and_emboss_kernel.cl" />
   </ItemGroup>
 </Project>

@@ -7,13 +7,10 @@
 #include <string>
 #include <cmath> // for ceil
 
-// OpenCV Headers
 #include <opencv2/opencv.hpp>
 
-// OpenCL Headers
 #include <CL/opencl.hpp> 
 
-// Helper function to read kernel file (Same as your Vector Add example)
 std::string read_kernel(const std::string& filename) {
     std::string kernel_text;
     std::ifstream kernel_reader;
@@ -71,7 +68,9 @@ int main()
 
     // Build Program
     //std::string kernelSource = read_kernel("grayscale_kernel.cl");
-    std::string kernelSource = read_kernel("grayscale_kernel.cl");
+    //std::string kernelSource = read_kernel("emboss_kernel.cl");
+    std::string kernelSource = read_kernel("gray_and_emboss_kernel.cl");
+    
     std::vector<std::string> sources;
     sources.push_back(kernelSource);
 
