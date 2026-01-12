@@ -2,27 +2,15 @@
 #define CL_HPP_TARGET_OPENCL_VERSION 200
 
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
-#include <cmath> // for ceil
+#include <cmath>
+
+#include "utils.h"
 
 #include <opencv2/opencv.hpp>
 
 #include <CL/opencl.hpp> 
-
-std::string read_kernel(const std::string& filename) {
-    std::string kernel_text;
-    std::ifstream kernel_reader;
-    kernel_reader.open(filename, std::ios::in);
-    std::string line;
-    while (std::getline(kernel_reader, line)) {
-        kernel_text.append(line);
-        kernel_text.append("\n");
-    }
-    kernel_reader.close();
-    return kernel_text;
-}
 
 int main()
 {

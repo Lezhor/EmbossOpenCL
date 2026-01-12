@@ -10,17 +10,17 @@ __kernel void processImage(__global const unsigned char* inputImage,
     if (x < 1 || y < 1 || x >= width - 1 || y >= height - 1) return;
 
     // Emboss Filter
-    const int filter[3][3] = {
-        {-2, -1,  0},
-        {-1,  1,  1},
-        { 0,  1,  2}
-    };
-
     // const int filter[3][3] = {
-        // {-1, -1,  0},
-        // {-1,  0,  1},
-        // { 0,  1,  1}
+        // {-2, -1,  0},
+        // {-1,  1,  1},
+        // { 0,  1,  2}
     // };
+
+    const int filter[3][3] = {
+        {-1, -1,  0},
+        {-1,  0,  1},
+        { 0,  1,  1}
+    };
 
     float sum = 0.0f;
 
