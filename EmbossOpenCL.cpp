@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <chrono>
 
 #include "utils.h"  // read_kernel
 
@@ -109,7 +110,15 @@ int main()
     // -------------------------------------------------------------------------
 	// ACTUAL KERNEL LAUNCH
     // -------------------------------------------------------------------------
+    auto start_time = std::chrono::high_resolution_clock::now();  // starting timer
     queue.enqueueNDRangeKernel(imageKernel, cl::NullRange, globalSize, localSize);
+    queue.finish();  // sync with gpu / wait to finish
+    auto end_time = std::chrono::high_resolution_clock::now();
+    double time_taken = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+    time_taken *= 1e-9; // Convert nanoseconds to seconds
+
+    // printing timer
+    std::cout << "Time taken: " << std::fixed << std::setprecision(6) << time_taken << " seconds\n";
 
     // -------------------------------------------------------------------------
     // GET RESULTS
@@ -124,10 +133,10 @@ int main()
     // save image
 	cv::imwrite("output.jpg", outputImage);
 
-    // Show result
-    cv::imshow("Input", inputImage);
-    cv::imshow("Output (Swapped Channels)", outputImage);
-    cv::waitKey(0);
+    //// Show result
+    //cv::imshow("Input", inputImage);
+    //cv::imshow("Output (Swapped Channels)", outputImage);
+    //cv::waitKey(0);
 
     return 0;
 }

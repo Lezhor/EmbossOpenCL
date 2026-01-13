@@ -22,6 +22,12 @@ __kernel void processImage(__global const unsigned char* inputImage,
         { 0,  1,  1}
     };
 
+    // const int filter[3][3] = {
+        // {-1, 0,  0},
+        // {0,  0,  0},
+        // { 0,  0,  1}
+    // };
+
     float sum = 0.0f;
 
     // Iterate through neighbors

@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EmbossCPUReference.cpp" />
     <ClCompile Include="EmbossOpenCL.cpp" />
   </ItemGroup>
   <ItemGroup>
