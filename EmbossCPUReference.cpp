@@ -54,32 +54,53 @@
 //            if (x < 1 || y < 1 || x >= width - 1 || y >= height - 1)
 //                continue; 
 //
-//            float sum = 0.0f;
+//			float sumR = 0.0f;
+//			float sumG = 0.0f;
+//			float sumB = 0.0f;
 //
-//            // 2. Iterate through neighbors (Convolution)
-//            for (int ky = -1; ky <= 1; ky++) {
-//                for (int kx = -1; kx <= 1; kx++) {
-//                    
-//                    int neighborX = x + kx;
-//                    int neighborY = y + ky;
+//			// Iterate through neighbors
+//			for (int ky = -1; ky <= 1; ky++) {
+//				for (int kx = -1; kx <= 1; kx++) {
+//					
+//					int neighborX = x + kx;
+//					int neighborY = y + ky;
+//					int index = (neighborY * width * channels) + (neighborX * channels);
 //
-//                    // Calculate index using your exact 1D formula
-//                    int index = (neighborY * width * channels) + (neighborX * channels);
+//					// Read individual channels
+//					unsigned char b = inputPtr[index + 0];
+//					unsigned char g = inputPtr[index + 1];
+//					unsigned char r = inputPtr[index + 2];
+//					
+//					// Get the filter weight
+//					int weight = filter[ky + 1][kx + 1];
 //
-//                    unsigned char b = inputPtr[index + 0];
-//                    unsigned char g = inputPtr[index + 1];
-//                    unsigned char r = inputPtr[index + 2];
+//					// Accumulate independently
+//					sumB += b * weight;
+//					sumG += g * weight;
+//					sumR += r * weight;
+//				}
+//			}
 //
-//                    // Grayscale conversion
-//                    float gray = (0.21f * r) + (0.72f * g) + (0.07f * b);
+//			// --- SELECTION LOGIC ---
+//			// Find which channel had the strongest reaction (biggest absolute value)
+//			float absR = (sumR < 0) ? -sumR : sumR;
+//			float absG = (sumG < 0) ? -sumG : sumG;
+//			float absB = (sumB < 0) ? -sumB : sumB;
 //
-//                    // Convolution accumulation
-//                    sum += gray * filter[ky + 1][kx + 1];
-//                }
-//            }
+//			float winner = sumG; // Default to Green
+//			float maxAbs = absG;
 //
-//            // 3. Clamping & Bias
-//            int finalVal = (int)(sum) + 128;
+//			if (absR > maxAbs) {
+//				winner = sumR;
+//				maxAbs = absR;
+//			}
+//			if (absB > maxAbs) {
+//				winner = sumB;
+//				maxAbs = absB;
+//			}
+//
+//			// Clamping & Bias
+//			int finalVal = (int)(winner) + 128;
 //            if (finalVal < 0) finalVal = 0;
 //            if (finalVal > 255) finalVal = 255;
 //

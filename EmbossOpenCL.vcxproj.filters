@@ -35,5 +35,6 @@
     <None Include="emboss_kernel.cl" />
     <None Include="grayscale_kernel.cl" />
     <None Include="gray_and_emboss_kernel.cl" />
+    <None Include="gray_and_emboss_2_kernel.cl" />
   </ItemGroup>
 </Project>
