@@ -6,7 +6,7 @@
 #include <string>
 #include <cmath>
 
-#include "utils.h"
+#include "utils.h"  // read_kernel
 
 #include <opencv2/opencv.hpp>
 
@@ -15,7 +15,6 @@
 int main()
 {
     // 1. Load the Image using OpenCV
-    // Make sure "input.jpg" is in your project folder!
     cv::Mat inputImage = cv::imread("input.jpg", cv::IMREAD_UNCHANGED);
     
     if (inputImage.empty()) {
@@ -33,28 +32,31 @@ int main()
     std::cout << "Processing Image: " << width << "x" << height << " (" << channels << " channels)\n";
 
     // -------------------------------------------------------------------------
-    // OPENCL SETUP (Standard Boilerplate)
+    // OPENCL SETUP
     // -------------------------------------------------------------------------
 
     // Get Platform
     std::vector<cl::Platform> all_platforms;
     cl::Platform::get(&all_platforms);
     if (all_platforms.empty()) { std::cout << "No platforms found.\n"; return 1; }
-    cl::Platform default_platform = all_platforms[0];
+    cl::Platform default_platform = all_platforms[0];  // take first available
     std::cout << "Using platform: " << default_platform.getInfo<CL_PLATFORM_NAME>() << "\n";
 
     // Get Device
     std::vector<cl::Device> all_devices;
     default_platform.getDevices(CL_DEVICE_TYPE_GPU, &all_devices);
     if (all_devices.empty()) { std::cout << "No devices found.\n"; return 1; }
-    cl::Device default_device = all_devices[0];
+    cl::Device default_device = all_devices[0];  // first available (sould be NVIDIA 3060)
     std::cout << "Using device: " << default_device.getInfo<CL_DEVICE_NAME>() << "\n";
 
     // Create Context & Queue
     cl::Context context({ default_device });
     cl::CommandQueue queue(context, default_device);
 
-    // Build Program
+    // -------------------------------------------------------------------------
+    // Kernel Setup
+    // -------------------------------------------------------------------------
+
     //std::string kernelSource = read_kernel("grayscale_kernel.cl");
     //std::string kernelSource = read_kernel("emboss_kernel.cl");
     std::string kernelSource = read_kernel("gray_and_emboss_kernel.cl");
@@ -83,7 +85,7 @@ int main()
     queue.enqueueWriteBuffer(dev_input, CL_TRUE, 0, dataSize, inputImage.data);
 
     // -------------------------------------------------------------------------
-    // KERNEL EXECUTION
+    // KERNEL Arguments
     // -------------------------------------------------------------------------
 
     // Set Arguments
@@ -93,26 +95,28 @@ int main()
     imageKernel.setArg(3, height);
     imageKernel.setArg(4, channels);
 
+    // -------------------------------------------------------------------------
+    // Thread and Group Sizes
+    // -------------------------------------------------------------------------
+
     // Define Grid Size (NDRange)
     // 1. Global Size: The total number of threads (Width x Height)
     cl::NDRange globalSize(width, height);
     
-    // 2. Local Size: The size of the work-group (e.g., 16x16 block like in CUDA)
-    // Note: We leave this Null usually, letting the driver decide, but to match CUDA 16x16:
-    // cl::NDRange localSize(16, 16); 
-    // Ideally, we pad globalSize to be a multiple of 16 if we force localSize.
-    // For simplicity here, we let OpenCL decide the local size automatically:
+    // 2. Local Size: Let the driver decide automatically (16x16 probably idk)
     cl::NDRange localSize = cl::NullRange; 
 
-    // Execute the kernel
+    // -------------------------------------------------------------------------
+	// ACTUAL KERNEL LAUNCH
+    // -------------------------------------------------------------------------
     queue.enqueueNDRangeKernel(imageKernel, cl::NullRange, globalSize, localSize);
 
     // -------------------------------------------------------------------------
     // GET RESULTS
     // -------------------------------------------------------------------------
 
-    // Create a container for the result
-    cv::Mat outputImage = cv::Mat::zeros(height, width, inputImage.type());
+    // Create a OpenCV container for the result
+	cv::Mat outputImage = cv::Mat::zeros(height, width, inputImage.type()); // same type and size as input
 
     // Copy Data Back: Device (GPU) -> Host (CPU)
     queue.enqueueReadBuffer(dev_output, CL_TRUE, 0, dataSize, outputImage.data);
