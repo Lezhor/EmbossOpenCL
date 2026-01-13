@@ -41,9 +41,9 @@ __kernel void processImage(__global const unsigned char* inputImage,
 			int index = (neighborY * width * channels) + (neighborX * channels);
 
 			// Read individual channels
-			unsigned char b = inputPtr[index + 0];
-			unsigned char g = inputPtr[index + 1];
-			unsigned char r = inputPtr[index + 2];
+			unsigned char b = inputImage[index + 0];
+			unsigned char g = inputImage[index + 1];
+			unsigned char r = inputImage[index + 2];
 			
 			// Get the filter weight
 			int weight = filter[ky + 1][kx + 1];

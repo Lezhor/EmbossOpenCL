@@ -60,7 +60,7 @@ int main()
 
     //std::string kernelSource = read_kernel("grayscale_kernel.cl");
     //std::string kernelSource = read_kernel("emboss_kernel.cl");
-    std::string kernelSource = read_kernel("gray_and_emboss_kernel.cl");
+    std::string kernelSource = read_kernel("gray_and_emboss_2_kernel.cl");
     
     std::vector<std::string> sources;
     sources.push_back(kernelSource);
@@ -121,7 +121,7 @@ int main()
     std::cout << "Time taken: " << std::fixed << std::setprecision(6) << time_taken << " seconds\n";
 
     // -------------------------------------------------------------------------
-    // GET RESULTS
+    // GET RESULkS
     // -------------------------------------------------------------------------
 
     // Create a OpenCV container for the result
@@ -134,9 +134,9 @@ int main()
 	cv::imwrite("output.jpg", outputImage);
 
     //// Show result
-    //cv::imshow("Input", inputImage);
-    //cv::imshow("Output (Swapped Channels)", outputImage);
-    //cv::waitKey(0);
+    cv::imshow("Input", inputImage);
+    cv::imshow("Output (Swapped Channels)", outputImage);
+    cv::waitKey(0);
 
     return 0;
 }
