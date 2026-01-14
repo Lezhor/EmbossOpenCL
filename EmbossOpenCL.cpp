@@ -106,6 +106,12 @@ int main()
     
     // 2. Local Size: Let the driver decide automatically (16x16 probably idk)
     cl::NDRange localSize = cl::NullRange; 
+    //cl::NDRange localSize(2, 2); 
+    //cl::NDRange localSize(4, 4); 
+    //cl::NDRange localSize(8, 8); 
+    //cl::NDRange localSize(16, 16); 
+    //cl::NDRange localSize(32, 32); 
+    //cl::NDRange localSize(64, 64);  // error
 
     // -------------------------------------------------------------------------
 	// ACTUAL KERNEL LAUNCH
